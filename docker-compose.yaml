@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  mysql:
+    build: ./mysql
+    container_name: mysql
+    tty: true
+    restart: always
+    ports:
+      - 3306:3306
+    networks:
+      - desafio
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=desafio
+
+  node:
+    build: ./node
+    container_name: node
+    restart: always
+    entrypoint: dockerize -wait tcp://mysql:3306 -timeout 15s
+    command: ["npm", "start"]
+    depends_on: 
+      - mysql
+    networks:
+      - desafio
+
+  nginx:
+    build: ./nginx
+    container_name: nginx
+    restart: always
+    entrypoint: dockerize -wait tcp://node:3000 -timeout 15s
+    command: ["nginx", "-g", "daemon off;"]
+    ports: 
+      - 8080:8080
+    depends_on: 
+      - node
+      - mysql
+    networks:
+      - desafio
+
+networks:
+  desafio:
+    driver: bridge
