@@ -10,13 +10,13 @@ const config = {
 }
 
 const app = new express()
-
+const conndb = mysql.createConnection(config)
 
 app.get('/', (req, res) => {
   let body = "<h1>Full Cycle Rocks!</h1>"
-  const conndb = mysql.createConnection(config)
+
   const name = faker.name.findName()
-  conndb.connect()
+
   conndb.query(`insert into people (name) values ("${name}");`)
 
   conndb.query("SELECT NAME FROM PEOPLE;", (err, rows) => {
@@ -28,7 +28,6 @@ app.get('/', (req, res) => {
     }
     res.send(`${body}`)
   })
-  conndb.end()
 })
 
 

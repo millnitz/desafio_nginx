@@ -2,8 +2,7 @@ FROM node:14
 
 WORKDIR /usr/src/node
 
-COPY package*.json .
-COPY server.js .
+COPY . .
 
 RUN npm install --quiet
 RUN apt-get update && apt-get install -y wget
