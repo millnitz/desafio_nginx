@@ -19,7 +19,7 @@ app.get('/', (req, res) => {
 
   conndb.query(`insert into people (name) values ("${name}");`)
 
-  conndb.query("select name from from people;", (err, rows) => {
+  conndb.query("SELECT NAME FROM people;", (err, rows) => {
     if (err) throw err
     if (rows) {
       rows.forEach(row => {
